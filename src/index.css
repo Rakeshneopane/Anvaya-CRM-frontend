@@ -1,21 +1,19 @@
-/* body{
-    padding: 0;
-    margin: 0;
+/* Base layout: navbar + LEFT sidebar only */
+.main-content {
+  margin-top: 64px;
+  padding: 1.5rem;
 }
-.container{
-    margin: 0;
-    padding: 2.5rem;
-    background-color: beige;
-    display: flex;
+
+/* Desktop: LEFT sidebar for ALL pages */
+@media (min-width: 992px) {
+  .main-content {
+    margin-left: 220px; /* sidebar width */
+  }
 }
-.side-bar{
-    flex-direction: row;
-    color: red;
+
+/* Desktop: RIGHT panel ONLY when needed */
+@media (min-width: 992px) {
+  .with-right-panel {
+    margin-right: 260px; /* right panel width */
+  }
 }
-ul{
-    list-style: none;
-    padding-inline-start: none;
-}
-.link-cards{
-    text-decoration: none;
-} */

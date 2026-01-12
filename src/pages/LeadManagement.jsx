@@ -3,60 +3,90 @@ import { useParams, Link } from "react-router-dom";
 import { useFetch } from "../useFetch";
 import { useEffect, useState } from "react";
 
+import Navbar from "../components/Header";
+import Sidebar from "../components/SideBar";
+import Footer from "../components/footer";
+import MobileSidebar from "../components/MobileSidebar";
+
 /* ================= SIDEBAR ================= */
 
-function Sidebar() {
-  return (
-    <aside>
-      <h2>Sidebar</h2>
-      <ul>
-        <li>
-          <Link to="/">Back to Dashboard</Link>
-        </li>
-      </ul>
-    </aside>
-  );
-}
+// function Sidebar() {
+//   return (
+//     <aside>
+//       <h2>Sidebar</h2>
+//       <ul>
+//         <li>
+//           <Link to="/">Back to Dashboard</Link>
+//         </li>
+//       </ul>
+//     </aside>
+//   );
+// }
 
 /* ================= LEAD DETAILS ================= */
 
 function LeadDetails({ lead }) {
   return (
-    <section>
-      <h2>Lead Details</h2>
-      <ul>
-        <li>Lead Name: {lead.name}</li>
-        <li>Sales Agent: {lead.salesAgent?.name}</li>
-        <li>Lead Source: {lead.source}</li>
-        <li>Lead Status: {lead.status}</li>
-        <li>Priority: {lead.priority}</li>
-        <li>Time to Close: {lead.timeToClose}</li>
-      </ul>
+    <div className="card shadow-sm mb-4">
+      <div className="card-body">
+        <div className="d-flex justify-content-between align-items-start mb-3">
+          <div>
+            <h4 className="fw-bold mb-1">{lead.name}</h4>
+            <p className="text-muted mb-0">
+              Assigned to {lead.salesAgent?.name || "Unassigned"}
+            </p>
+          </div>
 
-      <Link to={`/editLead/${lead._id}`}>
-        <button>Edit Lead Details</button>
-      </Link>
-    </section>
+          <Link to={`/editLead/${lead._id}`} className="btn btn-outline-dark btn-sm">
+            Edit Lead
+          </Link>
+        </div>
+
+        <div className="row g-3">
+          <Detail label="Source" value={lead.source} />
+          <Detail label="Status" value={lead.status} />
+          <Detail label="Priority" value={lead.priority} />
+          <Detail label="Time to Close" value={`${lead.timeToClose} days`} />
+        </div>
+      </div>
+    </div>
   );
 }
+
+function Detail({ label, value }) {
+  return (
+    <div className="col-md-6 col-lg-3">
+      <div className="small text-muted">{label}</div>
+      <div className="fw-semibold">{value}</div>
+    </div>
+  );
+}
+
 
 /* ================= COMMENTS LIST ================= */
 
 function CommentsList({ comments }) {
   if (!comments || comments.length === 0) {
-    return <li>No comments added yet</li>;
+    return <p className="text-muted">No comments added yet.</p>;
   }
 
   return (
-    <>
+    <div className="d-flex flex-column gap-3">
       {comments.map((c) => (
-        <li key={c._id}>
-          {c.author?.name}: {c.commentText}
-        </li>
+        <div key={c._id} className="border rounded p-3 bg-light">
+          <div className="small fw-bold mb-1">
+            {c.author?.name || "Unknown"}
+          </div>
+          <div className="small text-muted mb-2">
+            {new Date(c.createdAt).toLocaleString()}
+          </div>
+          <div>{c.commentText}</div>
+        </div>
       ))}
-    </>
+    </div>
   );
 }
+
 
 /* ================= ADD COMMENT FORM ================= */
 
@@ -68,23 +98,28 @@ function AddCommentForm({
   success,
   error,
 }) {
-  return (
-    <div>
-      <h4>Add New Comment</h4>
+   return (
+    <div className="card shadow-sm mt-4">
+      <div className="card-body">
+        <h6 className="fw-bold mb-3">Add Comment</h6>
 
-      <form onSubmit={onSubmit}>
-        <input
-          type="text"
-          value={commentInput}
-          onChange={(e) => setCommentInput(e.target.value)}
-        />
-        <button disabled={fetching}>
-          {fetching ? "Saving comment..." : "Submit comment"}
-        </button>
-      </form>
+        <form onSubmit={onSubmit} className="d-flex gap-2">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Write a comment..."
+            value={commentInput}
+            onChange={(e) => setCommentInput(e.target.value)}
+            required
+          />
+          <button className="btn btn-dark" disabled={fetching}>
+            {fetching ? "Saving..." : "Post"}
+          </button>
+        </form>
 
-      {success && <div>{success}</div>}
-      {error && <div>An error occurred.</div>}
+        {success && <div className="text-success mt-2">{success}</div>}
+        {error && <div className="text-danger mt-2">Failed to add comment</div>}
+      </div>
     </div>
   );
 }
@@ -92,6 +127,10 @@ function AddCommentForm({
 /* ================= MAIN ================= */
 
 export default function LeadManagement() {
+  
+  const NAVBAR_HEIGHT = 64;
+  const SIDEBAR_WIDTH = 220;
+  
   const { leadData } = useLeadContext();
   const { leadId } = useParams();
 
@@ -161,32 +200,40 @@ export default function LeadManagement() {
 
   return (
     <div>
-      <h1>Lead Management: {lead.name}</h1>
+      <header>
+        <Navbar />
+      </header>
+      
+      <aside>
+        <Sidebar />
+      </aside>
+      
+      <main
+        className="bg-light main-content"
+      >
+        <MobileSidebar />
+        <div className="container-fluid">
+          <h3 className="fw-bold mb-4">Lead Management</h3>
 
-      <Sidebar />
+          <LeadDetails lead={lead} />
 
-      <LeadDetails lead={lead} />
-
-      <section>
-        <h3>Comments Section</h3>
-        <ul>
-          <li>
-            {lead.salesAgent?.name} :{" "}
-            {new Date(lead.createdAt).toLocaleString()}
-          </li>
-
-          <CommentsList comments={comments} />
-        </ul>
-
-        <AddCommentForm
-          commentInput={commentInput}
-          setCommentInput={setCommentInput}
-          onSubmit={handleSubmit}
-          fetching={fetching}
-          success={success}
-          error={error}
-        />
-      </section>
+          <div className="card shadow-sm">
+            <div className="card-body">
+              <h5 className="fw-bold mb-3">Comments</h5>
+              <CommentsList comments={comments} />
+              <AddCommentForm
+                commentInput={commentInput}
+                setCommentInput={setCommentInput}
+                onSubmit={handleSubmit}
+                fetching={fetching}
+                success={success}
+                error={error}
+              />
+            </div>
+          </div>
+        </div>
+      </main>   
+      <Footer />   
     </div>
   );
 }

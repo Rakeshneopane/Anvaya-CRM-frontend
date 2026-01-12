@@ -3,20 +3,25 @@ import { useLeadContext } from "../contexts/leadContext";
 import Chart from "chart.js/auto";
 import { Link } from "react-router-dom";
 
+import Navbar from "../components/Header";
+import Sidebar from "../components/SideBar";
+import Footer from "../components/footer";
+import MobileSidebar from "../components/MobileSidebar";
+
 /* ================= SIDEBAR ================= */
 
-function Sidebar() {
-  return (
-    <aside>
-      <h2>Sidebar</h2>
-      <ul>
-        <li>
-          <Link to="/">Back to Dashboard</Link>
-        </li>
-      </ul>
-    </aside>
-  );
-}
+// function Sidebar() {
+//   return (
+//     <aside>
+//       <h2>Sidebar</h2>
+//       <ul>
+//         <li>
+//           <Link to="/">Back to Dashboard</Link>
+//         </li>
+//       </ul>
+//     </aside>
+//   );
+// }
 
 /* ================= CHARTS SECTION ================= */
 
@@ -34,6 +39,9 @@ function ChartsSection({ statusCount, agentCount, leadData }) {
     pieChartRef.current?.destroy();
     barChartRef.current?.destroy();
 
+    const colors = Object.keys(statusCount).map(
+                    () => `hsl(${Math.random() * 360}, 70%, 60%)`
+                  )
     pieChartRef.current = new Chart(pieRef.current, {
       type: "pie",
       data: {
@@ -41,11 +49,14 @@ function ChartsSection({ statusCount, agentCount, leadData }) {
         datasets: [
           {
             data: Object.values(statusCount),
-            backgroundColor: Object.keys(statusCount).map(
-              () => `hsl(${Math.random() * 360}, 70%, 60%)`
-            ),
+            backgroundColor: colors,
           },
         ],
+      },
+      options: {
+        plugins: {
+          legend: { position: "bottom" },
+        },
       },
     });
 
@@ -56,11 +67,18 @@ function ChartsSection({ statusCount, agentCount, leadData }) {
         datasets: [
           {
             data: Object.values(agentCount),
-            backgroundColor: Object.keys(agentCount).map(
-              () => `hsl(${Math.random() * 360}, 70%, 60%)`
-            ),
+            backgroundColor: "rgba(18, 103, 173, 0.7)", 
+            // Object.keys(agentCount).map(
+            //   () => `hsl(${Math.random() * 360}, 70%, 60%)`
+            // ),
           },
         ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+        },
       },
     });
 
@@ -71,13 +89,25 @@ function ChartsSection({ statusCount, agentCount, leadData }) {
   }, [statusCount, agentCount, leadData]);
 
   return (
-    <section>
-      <h4>Total Leads closed and in Pipeline:</h4>
-      <canvas ref={pieRef}></canvas>
+    <div className="row g-4 mb-4">
+      <div className="col-lg-6">
+        <div className="card shadow-sm h-100">
+          <div className="card-body">
+            <h6 className="fw-bold mb-3">Leads by Status</h6>
+            <canvas ref={pieRef} />
+          </div>
+        </div>
+      </div>
 
-      <h4>Leads Closed by Sales Agent:</h4>
-      <canvas ref={barRef}></canvas>
-    </section>
+      <div className="col-lg-6">
+        <div className="card shadow-sm h-100">
+          <div className="card-body">
+            <h6 className="fw-bold mb-3">Leads by Sales Agent</h6>
+            <canvas ref={barRef} />
+          </div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -85,42 +115,35 @@ function ChartsSection({ statusCount, agentCount, leadData }) {
 
 function StatusBreakdown({ statusCount, totalLeads }) {
   return (
-    <section>
-      <h3>Lead Status Breakdown</h3>
-      <ul style={{ listStyle: "none", padding: 0 }}>
-        {Object.entries(statusCount).map(([status, count]) => {
-          const percentage = ((count / totalLeads) * 100).toFixed(1);
+    <div className="card shadow-sm">
+      <div className="card-body">
+        <h6 className="fw-bold mb-3">Lead Status Breakdown</h6>
 
-          return (
-            <li key={status} style={{ marginBottom: "10px" }}>
-              <strong>{status}:</strong> {count} leads{" "}
-              <span style={{ color: "#666", marginLeft: "10px" }}>
-                ({percentage}%)
-              </span>
+        <div className="d-flex flex-column gap-3">
+          {Object.entries(statusCount).map(([status, count]) => {
+            const percentage = ((count / totalLeads) * 100).toFixed(1);
 
-              {/* Progress bar */}
-              <div
-                style={{
-                  background: "#eee",
-                  borderRadius: "4px",
-                  height: "8px",
-                  width: "200px",
-                }}
-              >
-                <div
-                  style={{
-                    background: "#1267ad",
-                    height: "100%",
-                    borderRadius: "4px",
-                    width: `${percentage}%`,
-                  }}
-                ></div>
+            return (
+              <div key={status}>
+                <div className="d-flex justify-content-between small mb-1">
+                  <span>{status}</span>
+                  <span className="fw-semibold">
+                    {count} ({percentage}%)
+                  </span>
+                </div>
+
+                <div className="progress" style={{ height: "8px" }}>
+                  <div
+                    className="progress-bar bg-primary"
+                    style={{ width: `${percentage}%` }}
+                  />
+                </div>
               </div>
-            </li>
-          );
-        })}
-      </ul>
-    </section>
+            );
+          })}
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -146,24 +169,37 @@ export default function Reports() {
 
   return (
     <div>
-      <h1>Anvaya CRM Reports</h1>
+      <header>
+        <Navbar />
+      </header>
+      <aside>
+        <Sidebar />
+      </aside>
+      <main
+        className="bg-light main-content"
+      >
+        <MobileSidebar />
+          <div className="container-fluid">
+            <div className="mb-4">
+              <h2 className="fw-bold mb-1">Reports</h2>
+              <p className="text-muted mb-0">
+                Visual overview of leads and sales performance
+              </p>
+            </div>
 
-      <Sidebar />
+            <ChartsSection
+              statusCount={statusCount}
+              agentCount={agentCount}
+              leadData={leadData}
+            />
 
-      <section>
-        <h2>Report Overview</h2>
-
-        <ChartsSection
-          statusCount={statusCount}
-          agentCount={agentCount}
-          leadData={leadData}
-        />
-
-        <StatusBreakdown
-          statusCount={statusCount}
-          totalLeads={leadData.length}
-        />
-      </section>
+            <StatusBreakdown
+              statusCount={statusCount}
+              totalLeads={leadData.length}
+            />
+        </div>        
+      </main>
+      <Footer />
     </div>
   );
 }

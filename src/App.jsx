@@ -12,7 +12,8 @@ import SalesManagement from './pages/SalesManagement';
 
 import LeadProvider from './contexts/leadContext';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-icons/font/bootstrap-icons.css";
 
 export default function App(){
   return(
