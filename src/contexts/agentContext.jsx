@@ -5,7 +5,7 @@ const AgentContext = createContext();
 export const useAgentContext = () => useContext(AgentContext);
 
 export default function AgentProvider({ children }) {
-  const url = "http://localhost:3000/api/agents";
+  const url = "https://crm-backend-pi-six.vercel.app/api/agents";
 
   // hydrate from localStorage FIRST
   const [agents, setAgents] = useState(() => {

@@ -226,19 +226,19 @@ export default function NewLead() {
   const isEditMode = !!leadId;
 
   const { data: salesAgentFetch } = useFetch(
-    "http://localhost:3000/api/agents",
+    "https://crm-backend-pi-six.vercel.app/api/agents",
     { allAgents: [] }
   );
   const agents = salesAgentFetch?.allAgents || [];
 
   const { data: tagsFetch } = useFetch(
-    "http://localhost:3000/api/tags",
+    "https://crm-backend-pi-six.vercel.app/api/tags",
     { allTags: [] }
   );
   const tags = tagsFetch?.allTags || [];
 
   const leadUrl = isEditMode
-    ? `http://localhost:3000/api/lead/${leadId}`
+    ? `hhttps://crm-backend-pi-six.vercel.app/api/lead/${leadId}`
     : null;
 
   const { data: leadFetch } = useFetch(leadUrl, {});
@@ -267,8 +267,8 @@ export default function NewLead() {
 
     try {
       const url = isEditMode
-        ? `http://localhost:3000/api/lead/${leadId}`
-        : `http://localhost:3000/api/lead`;
+        ? `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}`
+        : `https://crm-backend-pi-six.vercel.app/api/lead`;
 
       const method = isEditMode ? "PUT" : "POST";
 

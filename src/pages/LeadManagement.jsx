@@ -132,11 +132,11 @@ export default function LeadManagement() {
   const { leadData, deleteEntity } = useLeadContext();
   const { leadId } = useParams();
 
-  const leadUrl = `http://localhost:3000/api/lead/${leadId}`;
+  const leadUrl = `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}`;
   const { data: leadFetch } = useFetch(leadUrl, {});
   const fetchedLead = leadFetch?.lead;
 
-  const commentUrl = `http://localhost:3000/api/lead/${leadId}/comments`;
+  const commentUrl = `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}/comments`;
   const { data: commentFetch } = useFetch(commentUrl, {});
 
   const leadFromContext = leadData.find((l) => l._id === leadId);
@@ -172,7 +172,7 @@ export default function LeadManagement() {
         commentText: commentInput,
       };
 
-      const url = `http://localhost:3000/api/lead/${lead._id}/comments`;
+      const url = `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}/comments`;
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -197,7 +197,7 @@ export default function LeadManagement() {
   const handleDeleteComment = (comment) => {
     deleteEntity({
       type: "comment",
-      url: `http://localhost:3000/api/lead/${lead._id}/comments/${comment._id}`,
+      url: `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}/comments/${comment._id}`,
       onSuccess: () => {
         setComments((prev) =>
           prev.filter((c) => c._id !== comment._id)

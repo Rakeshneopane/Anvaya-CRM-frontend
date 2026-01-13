@@ -72,7 +72,7 @@ export default function SalesManagement() {
 
   const { leadData } = useLeadContext();
 
-  const url = "http://localhost:3000/api/agents";
+  const url = "https://crm-backend-pi-six.vercel.app/api/agents";
   const { data: salesAgents } = useFetch(url, { allAgents: [] });
 
   return (

@@ -79,7 +79,7 @@ export default function Settings() {
                         onClick={() =>
                           deleteEntity({
                             type: "lead",
-                            url: `http://localhost:3000/api/lead/${lead._id}`,
+                            url: `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}`,
                             onSuccess: () =>
                               toast.success("Lead deleted"),
                             onError: (e) =>
@@ -125,7 +125,7 @@ export default function Settings() {
                         onClick={() =>
                           deleteEntity({
                             type: "agent",
-                            url: `http://localhost:3000/api/agents/${agent._id}`,
+                            url: `https://crm-backend-pi-six.vercel.app/api/agents/${agent._id}`,
                             onSuccess: () =>
                               toast.success("Agent deleted"),
                             onError: (e) =>

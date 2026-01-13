@@ -178,7 +178,7 @@ export default function SalesAgentView() {
   const SIDEBAR_WIDTH = 220;
   const { leadData } = useLeadContext();
 
-  const urlAgents = "http://localhost:3000/api/agents";
+  const urlAgents = "https://crm-backend-pi-six.vercel.app/api/agents";
   const { data: agentsRes, loading } = useFetch(urlAgents, {
     allAgents: [],
   });

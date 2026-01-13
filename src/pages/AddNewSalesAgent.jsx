@@ -87,7 +87,7 @@ export default function NewSalesAgent() {
   const [fetching, setFetching] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const urlAgent = "http://localhost:3000/api/agents";
+  const urlAgent = "https://crm-backend-pi-six.vercel.app/api/agents";
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -6,7 +6,7 @@ const LeadContext = createContext();
 export const useLeadContext = () => useContext(LeadContext);
 
 export default function LeadProvider({ children }) {
-  const url = "http://localhost:3000/api/leads";
+  const url = "https://crm-backend-pi-six.vercel.app/api/leads";
 
   // hydrate from localStorage FIRST
   const [leadData, setLeadData] = useState(() => {

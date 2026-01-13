@@ -63,7 +63,7 @@ function LeadList({ leads, deleteLead }) {
                 <button
                   onClick={()=>deleteLead({
                     type: "lead", 
-                    url:  `http://localhost:3000/api/lead/${lead._id}`,
+                    url:  `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}`,
                     onSuccess: ()=>{
                       toast.success("Deleted successfully");
                     },
