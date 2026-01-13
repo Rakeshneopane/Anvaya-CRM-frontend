@@ -63,11 +63,11 @@ function LeadList({ leads, deleteLead }) {
                 <button
                   onClick={()=>deleteLead({
                     type: "lead", 
-                    url:  `/api/lead/${lead._id}`,
+                    url:  `http://localhost:3000/api/lead/${lead._id}`,
                     onSuccess: ()=>{
                       toast.success("Deleted successfully");
                     },
-                    onError: ()=>{
+                    onError: (error)=>{
                       toast.error(error?.message || "Delete Failed");
                     },
                   })}

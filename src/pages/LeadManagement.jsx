@@ -2,26 +2,13 @@ import { useLeadContext } from "../contexts/leadContext";
 import { useParams, Link } from "react-router-dom";
 import { useFetch } from "../useFetch";
 import { useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 
 import Navbar from "../components/Header";
 import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
-/* ================= SIDEBAR ================= */
-
-// function Sidebar() {
-//   return (
-//     <aside>
-//       <h2>Sidebar</h2>
-//       <ul>
-//         <li>
-//           <Link to="/">Back to Dashboard</Link>
-//         </li>
-//       </ul>
-//     </aside>
-//   );
-// }
 
 /* ================= LEAD DETAILS ================= */
 
@@ -65,7 +52,7 @@ function Detail({ label, value }) {
 
 /* ================= COMMENTS LIST ================= */
 
-function CommentsList({ comments }) {
+function CommentsList({ comments, onDelete }) {
   if (!comments || comments.length === 0) {
     return <p className="text-muted">No comments added yet.</p>;
   }
@@ -74,19 +61,30 @@ function CommentsList({ comments }) {
     <div className="d-flex flex-column gap-3">
       {comments.map((c) => (
         <div key={c._id} className="border rounded p-3 bg-light">
-          <div className="small fw-bold mb-1">
-            {c.author?.name || "Unknown"}
+          <div className="d-flex justify-content-between align-items-start">
+            <div>
+              <div className="small fw-bold mb-1">
+                {c.author?.name || "Unknown"}
+              </div>
+              <div className="small text-muted mb-2">
+                {new Date(c.createdAt).toLocaleString()}
+              </div>
+            </div>
+
+            <button
+              className="btn btn-outline-danger btn-sm"
+              onClick={() => onDelete(c)}
+            >
+              Delete
+            </button>
           </div>
-          <div className="small text-muted mb-2">
-            {new Date(c.createdAt).toLocaleString()}
-          </div>
+
           <div>{c.commentText}</div>
         </div>
       ))}
     </div>
   );
 }
-
 
 /* ================= ADD COMMENT FORM ================= */
 
@@ -131,7 +129,7 @@ export default function LeadManagement() {
   const NAVBAR_HEIGHT = 64;
   const SIDEBAR_WIDTH = 220;
   
-  const { leadData } = useLeadContext();
+  const { leadData, deleteEntity } = useLeadContext();
   const { leadId } = useParams();
 
   const leadUrl = `http://localhost:3000/api/lead/${leadId}`;
@@ -196,6 +194,22 @@ export default function LeadManagement() {
     }
   };
 
+  const handleDeleteComment = (comment) => {
+    deleteEntity({
+      type: "comment",
+      url: `http://localhost:3000/api/lead/${lead._id}/comments/${comment._id}`,
+      onSuccess: () => {
+        setComments((prev) =>
+          prev.filter((c) => c._id !== comment._id)
+        );
+        toast.success("Comment deleted");
+      },
+      onError: (error) => {
+        toast.error(error.message || "Failed to delete comment");
+      },
+    });
+  };
+
   if (!lead) return <div>Loading...</div>;
 
   return (
@@ -220,7 +234,10 @@ export default function LeadManagement() {
           <div className="card shadow-sm">
             <div className="card-body">
               <h5 className="fw-bold mb-3">Comments</h5>
-              <CommentsList comments={comments} />
+              <CommentsList
+                comments={comments}
+                onDelete={handleDeleteComment}
+              />
               <AddCommentForm
                 commentInput={commentInput}
                 setCommentInput={setCommentInput}

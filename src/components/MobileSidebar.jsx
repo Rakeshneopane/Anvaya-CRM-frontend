@@ -14,6 +14,7 @@ export default function MobileSidebar() {
               ["Sales Agent View", "/SalesAgentView"],
               ["Reports", "/reports"],
               ["Sales Management", "/SalesManagement"],
+              ["Settings", "/settings"],
             ].map(([label, path]) => (
               <li key={path} className="nav-item">
                 <NavLink to={path} className={({ isActive }) =>

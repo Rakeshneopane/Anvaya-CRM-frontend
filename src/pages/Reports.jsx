@@ -1,149 +1,104 @@
 import { useEffect, useRef } from "react";
 import { useLeadContext } from "../contexts/leadContext";
 import Chart from "chart.js/auto";
-import { Link } from "react-router-dom";
 
 import Navbar from "../components/Header";
 import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
-/* ================= SIDEBAR ================= */
+/* ================= COLORS ================= */
 
-// function Sidebar() {
-//   return (
-//     <aside>
-//       <h2>Sidebar</h2>
-//       <ul>
-//         <li>
-//           <Link to="/">Back to Dashboard</Link>
-//         </li>
-//       </ul>
-//     </aside>
-//   );
-// }
+const CHART_COLORS = [
+  "#4f46e5", 
+  "#22c55e", 
+  "#f97316", 
+  "#ef4444", 
+  "#06b6d4", 
+  "#a855f7", 
+];
 
-/* ================= CHARTS SECTION ================= */
+/* ================= CHART CARD ================= */
 
-function ChartsSection({ statusCount, agentCount, leadData }) {
-  const pieRef = useRef(null);
-  const barRef = useRef(null);
+function ChartCard({ title, children }) {
+  return (
+    <div className="card shadow-sm h-100">
+      <div className="card-body">
+        <h6 className="fw-bold mb-3">{title}</h6>
+        {children}
+      </div>
+    </div>
+  );
+}
 
-  const pieChartRef = useRef(null);
-  const barChartRef = useRef(null);
+/* ================= CHART ================= */
+
+function ChartCanvas({ type, labels, data }) {
+  const canvasRef = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    if (!leadData || leadData.length === 0) return;
+    if (!labels.length) return;
 
-    // destroy previous charts
-    pieChartRef.current?.destroy();
-    barChartRef.current?.destroy();
+    chartRef.current?.destroy();
 
-    const colors = Object.keys(statusCount).map(
-                    () => `hsl(${Math.random() * 360}, 70%, 60%)`
-                  )
-    pieChartRef.current = new Chart(pieRef.current, {
-      type: "pie",
+    chartRef.current = new Chart(canvasRef.current, {
+      type,
       data: {
-        labels: Object.keys(statusCount),
+        labels,
         datasets: [
           {
-            data: Object.values(statusCount),
-            backgroundColor: colors,
-          },
-        ],
-      },
-      options: {
-        plugins: {
-          legend: { position: "bottom" },
-        },
-      },
-    });
-
-    barChartRef.current = new Chart(barRef.current, {
-      type: "bar",
-      data: {
-        labels: Object.keys(agentCount),
-        datasets: [
-          {
-            data: Object.values(agentCount),
-            backgroundColor: "rgba(18, 103, 173, 0.7)", 
-            // Object.keys(agentCount).map(
-            //   () => `hsl(${Math.random() * 360}, 70%, 60%)`
-            // ),
+            data,
+            backgroundColor: CHART_COLORS.slice(0, labels.length),
           },
         ],
       },
       options: {
         responsive: true,
         plugins: {
-          legend: { display: false },
+          legend: { position: "bottom" },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => `${ctx.label}: ${ctx.raw}`,
+            },
+          },
         },
       },
     });
 
-    return () => {
-      pieChartRef.current?.destroy();
-      barChartRef.current?.destroy();
-    };
-  }, [statusCount, agentCount, leadData]);
+    return () => chartRef.current?.destroy();
+  }, [labels, data, type]);
 
-  return (
-    <div className="row g-4 mb-4">
-      <div className="col-lg-6">
-        <div className="card shadow-sm h-100">
-          <div className="card-body">
-            <h6 className="fw-bold mb-3">Leads by Status</h6>
-            <canvas ref={pieRef} />
-          </div>
-        </div>
-      </div>
-
-      <div className="col-lg-6">
-        <div className="card shadow-sm h-100">
-          <div className="card-body">
-            <h6 className="fw-bold mb-3">Leads by Sales Agent</h6>
-            <canvas ref={barRef} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <canvas ref={canvasRef} />;
 }
 
 /* ================= STATUS BREAKDOWN ================= */
 
-function StatusBreakdown({ statusCount, totalLeads }) {
+function StatusBreakdown({ statusCount, total }) {
   return (
-    <div className="card shadow-sm">
-      <div className="card-body">
-        <h6 className="fw-bold mb-3">Lead Status Breakdown</h6>
-
-        <div className="d-flex flex-column gap-3">
-          {Object.entries(statusCount).map(([status, count]) => {
-            const percentage = ((count / totalLeads) * 100).toFixed(1);
-
-            return (
-              <div key={status}>
-                <div className="d-flex justify-content-between small mb-1">
-                  <span>{status}</span>
-                  <span className="fw-semibold">
-                    {count} ({percentage}%)
-                  </span>
-                </div>
-
-                <div className="progress" style={{ height: "8px" }}>
-                  <div
-                    className="progress-bar bg-primary"
-                    style={{ width: `${percentage}%` }}
-                  />
-                </div>
+    <ChartCard title="Lead Status Breakdown">
+      <div className="d-flex flex-column gap-3">
+        {Object.entries(statusCount).map(([status, count]) => {
+          const percent = ((count / total) * 100).toFixed(1);
+          return (
+            <div key={status}>
+              <div className="d-flex justify-content-between small mb-1">
+                <span>{status}</span>
+                <span className="fw-semibold">
+                  {count} ({percent}%)
+                </span>
               </div>
-            );
-          })}
-        </div>
+              <div className="progress" style={{ height: "8px" }}>
+                <div
+                  className="progress-bar bg-primary"
+                  style={{ width: `${percent}%` }}
+                />
+              </div>
+            </div>
+          );
+        })}
       </div>
-    </div>
+    </ChartCard>
   );
 }
 
@@ -152,53 +107,120 @@ function StatusBreakdown({ statusCount, totalLeads }) {
 export default function Reports() {
   const { leadData } = useLeadContext();
 
-  const statusCount = (leadData ?? []).reduce((acc, curr) => {
-    acc[curr.status] = (acc[curr.status] || 0) + 1;
-    return acc;
-  }, {});
-
-  const agentCount = (leadData ?? []).reduce((acc, curr) => {
-    const agentName = curr.salesAgent?.name || "Unknown";
-    acc[agentName] = (acc[agentName] || 0) + 1;
-    return acc;
-  }, {});
-
   if (!leadData || leadData.length === 0) {
     return <div>Loading...</div>;
   }
 
+  /* ===== DERIVED DATA ===== */
+
+  // Status distribution
+  const statusCount = leadData.reduce((acc, lead) => {
+    acc[lead.status] = (acc[lead.status] || 0) + 1;
+    return acc;
+  }, {});
+
+  // Pipeline (not closed)
+  const pipelineStatusCount = leadData.reduce((acc, lead) => {
+    if (lead.status !== "Closed") {
+      acc[lead.status] = (acc[lead.status] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  // Closed last week
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const closedLastWeek = leadData.filter(
+    (lead) =>
+      lead.status === "Closed" &&
+      new Date(lead.updatedAt) >= sevenDaysAgo
+  );
+
+  const closedLastWeekCount = {
+    Closed: closedLastWeek.length,
+    Others: leadData.length - closedLastWeek.length,
+  };
+
+  // Closed by agent
+  const closedByAgent = leadData.reduce((acc, lead) => {
+    if (lead.status === "Closed") {
+      const agent = lead.salesAgent?.name || "Unknown";
+      acc[agent] = (acc[agent] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
   return (
     <div>
-      <header>
-        <Navbar />
-      </header>
-      <aside>
-        <Sidebar />
-      </aside>
-      <main
-        className="bg-light main-content"
-      >
+      <Navbar />
+      <Sidebar />
+
+      <main className="bg-light main-content">
         <MobileSidebar />
-          <div className="container-fluid">
-            <div className="mb-4">
-              <h2 className="fw-bold mb-1">Reports</h2>
-              <p className="text-muted mb-0">
-                Visual overview of leads and sales performance
-              </p>
+
+        <div className="container-fluid">
+          <div className="mb-4">
+            <h2 className="fw-bold mb-1">Reports</h2>
+            <p className="text-muted mb-0">
+              Visual overview of leads and sales performance
+            </p>
+          </div>
+
+          {/* ===== ROW 1 ===== */}
+          <div className="row g-4 mb-4">
+            <div className="col-lg-6">
+              <ChartCard title="Lead Status Distribution">
+                <ChartCanvas
+                  type="pie"
+                  labels={Object.keys(statusCount)}
+                  data={Object.values(statusCount)}
+                />
+              </ChartCard>
             </div>
 
-            <ChartsSection
-              statusCount={statusCount}
-              agentCount={agentCount}
-              leadData={leadData}
-            />
+            <div className="col-lg-6">
+              <ChartCard title="Leads Closed Last Week">
+                <ChartCanvas
+                  type="pie"
+                  labels={Object.keys(closedLastWeekCount)}
+                  data={Object.values(closedLastWeekCount)}
+                />
+              </ChartCard>
+            </div>
+          </div>
 
-            <StatusBreakdown
-              statusCount={statusCount}
-              totalLeads={leadData.length}
-            />
-        </div>        
+          {/* ===== ROW 2 ===== */}
+          <div className="row g-4 mb-4">
+            <div className="col-lg-6">
+              <ChartCard title="Pipeline Leads by Status">
+                <ChartCanvas
+                  type="bar"
+                  labels={Object.keys(pipelineStatusCount)}
+                  data={Object.values(pipelineStatusCount)}
+                />
+              </ChartCard>
+            </div>
+
+            <div className="col-lg-6">
+              <ChartCard title="Closed Leads by Sales Agent">
+                <ChartCanvas
+                  type="bar"
+                  labels={Object.keys(closedByAgent)}
+                  data={Object.values(closedByAgent)}
+                />
+              </ChartCard>
+            </div>
+          </div>
+
+          {/* ===== STATUS BREAKDOWN ===== */}
+          <StatusBreakdown
+            statusCount={statusCount}
+            total={leadData.length}
+          />
+        </div>
       </main>
+
       <Footer />
     </div>
   );

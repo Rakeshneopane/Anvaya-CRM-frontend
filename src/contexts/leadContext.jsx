@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
+import { toast } from "react-hot-toast";
 
 const LeadContext = createContext();
 export const useLeadContext = () => useContext(LeadContext);
@@ -31,38 +32,41 @@ export default function LeadProvider({ children }) {
   ];
 
   // Delete function
-const deleteEntity = async ({ type, url, onSuccess, onError }) => {
+  const deleteEntity = async ({ type, url, onSuccess, onError, updateState }) => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete this ${type}?`
+    );
+    if (!confirmed) return;
 
-  const confirmed = window.confirm(
-    `Are you sure you want to delete this ${type}?`
-  );
+    try {
+      const res = await fetch(url, { method: "DELETE" });
 
-  if (!confirmed) return;
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data?.error || `Failed to delete ${type}`);
+      }
 
-  try {
-    const res = await fetch(url, {
-      method: "DELETE",
-    });
+      // ✅ optimistic update
+      if (typeof updateState === "function") {
+        updateState();
+      }
 
-    if (!res.ok) {
-      throw new Error(`Failed to delete ${type}`);
+      if (typeof onSuccess === "function") {
+        onSuccess();
+      }
+
+      // optional: refetch AFTER optimistic update
+      setTimeout(() => refetch(), 300);
+
+    } catch (error) {
+      console.error(error);
+      if (typeof onError === "function") {
+        onError(error);
+      } else {
+        alert(error.message);
+      }
     }
-
-    if (typeof onSuccess === "function") {
-      onSuccess();
-    }
-
-    refetch();
-
-  } catch (error) {
-    console.error(error);
-    if(typeof onError === "function"){
-      onError(error);
-    }
-    else alert(error.message);
-  }
-};
-
+  };
 
   return (
     <LeadContext.Provider

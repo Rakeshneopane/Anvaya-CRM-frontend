@@ -164,6 +164,15 @@ export default function Navbar({leads}) {
                             Reports
                         </NavLink>
                     </li>
+                    <li className="nav-item mb-2 mb-lg-0">
+                        <NavLink 
+                            to="/settings" 
+                            className={"nav-link"}
+                            onClick={() => setIsNavExpanded(false)}
+                        >
+                            Settings
+                        </NavLink>
+                    </li>
                 </ul>
             </div>
         </div>

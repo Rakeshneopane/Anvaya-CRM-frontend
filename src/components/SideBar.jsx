@@ -20,6 +20,7 @@ export default function Sidebar() {
             ["Sales Agent View", "/SalesAgentView"],
             ["Reports", "/reports"],
             ["Sales Management", "/SalesManagement"],
+            ["Settings", "/settings"],
           ].map(([label, path]) => (
             <li key={path} className="nav-item">
               <NavLink

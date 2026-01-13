@@ -38,7 +38,7 @@ export default function Settings() {
       <main className="main-content">
 
         <MobileSidebar />
-        
+
         <h1 className="fw-bold mb-2">Settings</h1>
         <p className="text-muted mb-4">
           Manage and delete entities. These actions are permanent.
@@ -79,7 +79,7 @@ export default function Settings() {
                         onClick={() =>
                           deleteEntity({
                             type: "lead",
-                            url: `/api/lead/${lead._id}`,
+                            url: `http://localhost:3000/api/lead/${lead._id}`,
                             onSuccess: () =>
                               toast.success("Lead deleted"),
                             onError: (e) =>
@@ -125,7 +125,7 @@ export default function Settings() {
                         onClick={() =>
                           deleteEntity({
                             type: "agent",
-                            url: `/api/agents/${agent._id}`,
+                            url: `http://localhost:3000/api/agents/${agent._id}`,
                             onSuccess: () =>
                               toast.success("Agent deleted"),
                             onError: (e) =>
