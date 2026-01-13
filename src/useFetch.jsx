@@ -1,41 +1,40 @@
-import { useEffect,useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 
-export const useFetch = (url, initialData) =>{
+export const useFetch = (url, initialData) => {
+  const [data, setData] = useState(initialData);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-   
-    const [data, setData] = useState(initialData);
-    const [error, setError] = useState(null);
-    const [loading, setLoading] = useState(false);
+  const fetchData = useCallback(() => {
+    if (!url) return;
 
-    useEffect(()=>{
-        if (!url) return;
+    let active = true;
+    setLoading(true);
+    setError(null);
 
-        let active = true;
-        setLoading(true);
+    async function run() {
+      try {
+        const response = await fetch(url);
+        const json = await response.json();
+        if (active) setData(json);
+      } catch (err) {
+        if (active) setError(err.message);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
 
-        const fetchData = async() => {
-            try {
-                const response = await fetch(url);
-                const json = await response.json();
-                if(active)
-                    setData(json);
+    run();
 
-            } catch (error) {    
-                if(active)    
-                    setError(error.message);
-            } finally{
-                if(active)
-                    setLoading(false);
-            }
-        };
+    return () => {
+      active = false;
+    };
+  }, [url]);
 
-        fetchData();
+  useEffect(() => {
+    const cleanup = fetchData();
+    return cleanup;
+  }, [fetchData]);
 
-        return ()=>{
-            active = false;
-        };
-    
-    }, [url]);
-
-    return {data, loading, error}
-}
+  return { data, loading, error, refetch: fetchData };
+};

@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useLeadContext } from "../contexts/leadContext";
 
+import { toast } from "react-hot-toast";
+
 import Navbar from "../components/Header";
 import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
@@ -10,7 +12,7 @@ import MobileSidebar from "../components/MobileSidebar";
 
 /* ================= LEAD LIST ================= */
 
-function LeadList({ leads }) {
+function LeadList({ leads, deleteLead }) {
   const getStatusClass = (status) => {
     switch (status) {
       case "New":
@@ -56,6 +58,22 @@ function LeadList({ leads }) {
                   className="btn btn-outline-dark btn-sm w-100"
                 > View Lead 
               </Link>
+              </div>
+              <div className="mt-auto">
+                <button
+                  onClick={()=>deleteLead({
+                    type: "lead", 
+                    url:  `/api/lead/${lead._id}`,
+                    onSuccess: ()=>{
+                      toast.success("Deleted successfully");
+                    },
+                    onError: ()=>{
+                      toast.error(error?.message || "Delete Failed");
+                    },
+                  })}
+                  className="btn btn-outline-dark btn-sm w-100 mt-1"
+                > Delete Lead
+              </button>
               </div>
             </div>
           </div>
@@ -133,7 +151,7 @@ export default function Home() {
   const SIDEBAR_WIDTH = 220;
   const RIGHT_PANEL_WIDTH = 260;
 
-  const { leadData } = useLeadContext();
+  const { leadData, deleteEntity } = useLeadContext();
 
   const [quickFilter, setQuickFilter] = useState({
     status: "",
@@ -182,7 +200,7 @@ export default function Home() {
             setQuickFilter={setQuickFilter}
           />
           
-          <LeadList leads={processedLead} />
+          <LeadList leads={processedLead} deleteLead ={deleteEntity} />
 
           <Link to="/newLead" className="btn btn-dark my-4" style={{width: "100%"}}>Add New Lead</Link>
         </main>

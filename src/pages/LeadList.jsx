@@ -6,21 +6,6 @@ import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
-/* ================= SIDEBAR ================= */
-
-// function Sidebar() {
-//   return (
-//     <aside>
-//       <h2>Sidebar</h2>
-//       <ul>
-//         <Link to="/">
-//           <li>Back to Dashboard</li>
-//         </Link>
-//       </ul>
-//     </aside>
-//   );
-// }
-
 /* ================= LEAD OVERVIEW ================= */
 
 function LeadOverview({ leads }) {
@@ -106,83 +91,6 @@ function Filters({ quickFilter, setQuickFilter, agents }) {
   );
 }
 
-// function Filters({ quickFilter, setQuickFilter, agents }) {
-//   const statuses = ["New", "Contacted", "Qualified", "Proposal Sent", "Closed"];
-
-//   return (
-//     <div>
-//       <h4>Filters</h4>
-
-//       {/* Status Filter */}
-//       <div>
-//         <strong>Status:</strong>{" "}
-//         {statuses.map((status) => (
-//           <button
-//             key={status}
-//             onClick={() =>
-//               setQuickFilter({ ...quickFilter, status })
-//             }
-//           >
-//             {status}
-//           </button>
-//         ))}
-//         <button
-//           onClick={() =>
-//             setQuickFilter({ ...quickFilter, status: "" })
-//           }
-//         >
-//           All
-//         </button>
-//       </div>
-
-//       {/* Sales Agent Filter */}
-//       <div>
-//         <strong>Sales Agent:</strong>{" "}
-//         <button
-//           onClick={() =>
-//             setQuickFilter({ ...quickFilter, salesAgent: "" })
-//           }
-//         >
-//           All Agents
-//         </button>
-
-//         {agents.map((agent) => (
-//           <button
-//             key={agent}
-//             value={agent}
-//             onClick={(e) =>
-//               setQuickFilter({
-//                 ...quickFilter,
-//                 salesAgent: e.target.value,
-//               })
-//             }
-//           >
-//             {agent}
-//           </button>
-//         ))}
-//       </div>
-//     </div>
-//   );
-// }
-
-/* ================= SORT CONTROLS ================= */
-
-// function SortControls({ setSortType }) {
-//   return (
-//     <div>
-//       <h4>Sort By</h4>
-//       <button onClick={() => setSortType("priority")}>
-//         Priority
-//       </button>
-//       <button onClick={() => setSortType("timeToClose")}>
-//         Time to close
-//       </button>
-//       <button onClick={() => setSortType("")}>
-//         Clear Sort
-//       </button>
-//     </div>
-//   );
-// }
 function SortControls({ sortType,setSortType }) {
   return (
     <div className="card shadow-sm mb-4">
@@ -279,10 +187,7 @@ export default function LeadListPage() {
       >
         <MobileSidebar />
         <h1 className="fw-bold mb-3">Lead List</h1>
-        <section>
-            <p className="text-muted">Lead Overview</p>
-            <LeadOverview leads={processedLead} />
-          </section>
+        
 
           <section>
             <Filters
@@ -304,7 +209,11 @@ export default function LeadListPage() {
             >
               Add New Lead
             </Link>
-        </section>
+          </section>
+          <section>
+            <p className="text-muted">Lead Overview</p>
+            <LeadOverview leads={processedLead} />
+          </section>
       </main>
       <Footer />
     </div>

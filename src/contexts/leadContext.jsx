@@ -1,76 +1,81 @@
-import { useState, useEffect, useContext, createContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
 
 const LeadContext = createContext();
-export const useLeadContext = ()=> useContext(LeadContext);
+export const useLeadContext = () => useContext(LeadContext);
 
-export default function LeadProvider({children}) {
+export default function LeadProvider({ children }) {
+  const url = "http://localhost:3000/api/leads";
 
-    const [leadData, setLeadData] = useState(()=>{
-        const stored = window.localStorage.getItem("localLeadData");
-        return stored ? JSON.parse(stored): [];
-    });
-    const url = "http://localhost:3000/api/leads";
-    const { data: leadRes } = useFetch(url, { "leads": [] });
+  // hydrate from localStorage FIRST
+  const [leadData, setLeadData] = useState(() => {
+    const cached = localStorage.getItem("localLeadData");
+    return cached ? JSON.parse(cached) : [];
+  });
 
-    // save leads
-    useEffect(()=>{
-        if(!leadRes?.leads) return; 
-        const normalisedData = leadRes.leads;
-        if(leadData.length === 0){
-            setLeadData(normalisedData);
-        }
-    }, [leadRes]);
+  // fetch fresh data in background
+  const { data, loading, error, refetch } = useFetch(url, { leads: [] });
 
-    // quick filter for status and sales agent
-    // const [quickFilter, setQuickFilter] = useState({
-    //     status: "",
-    //     salesAgent: "",
-    // });
+  // reconcile backend → UI
+  useEffect(() => {
+    if (data?.leads && data.leads.length > 0) {
+      setLeadData(data.leads);
+      localStorage.setItem("localLeadData", JSON.stringify(data.leads));
+    }
+  }, [data]);
 
-    //sort type
-    //  const priorityObject = {
-    //     "High": 1,
-    //     "Medium": 2,
-    //     "Low": 3
-    // };
-    // const [sortType, setSortType] = useState(""); 
-
-    // const processedLead = leadData.filter((lead)=>{
-    //     const matchStatus = !quickFilter.status || lead.status === quickFilter.status;
-    //     const matchSalesAgent = !quickFilter.salesAgent || lead.salesAgent?.name === quickFilter.salesAgent;
-    //     return matchSalesAgent && matchStatus;  
-    // }).sort((a, b)=>{
-    //     switch(sortType){
-    //         case "priority":
-    //             return priorityObject[a.priority] - priorityObject[b.priority];
-    //         case "timeToClose":
-    //             return a.timeToClose - b.timeToClose;
-    //         default :
-    //             return 0;
-    //     }
-    // });    
-
-    // persistant data
-    useEffect(()=>{
-        if(leadData.length === 0) return;
-        window.localStorage.setItem("localLeadData", JSON.stringify(leadData));
-    },[leadData]);
-
-    let persistantLead = JSON.parse(window.localStorage.getItem("localLeadData"))|| [{name: "No agent was fetched"}];
-
-    let uniqueSalesAgentName = [...new Set(persistantLead.map(lead=> lead.salesAgent?.name).filter(Boolean))];
-    console.log("unique sales Agent: ", uniqueSalesAgentName); 
-
-    return (
-        <LeadContext.Provider value={{ 
-                // normalised data from backend 
-                leadData,
-                // unique sales agent
-                uniqueSalesAgentName,
-                }}>
-            {children}
-        </LeadContext.Provider>
+  const uniqueSalesAgentName = [
+    ...new Set(
+      leadData.map(lead => lead.salesAgent?.name).filter(Boolean)
     )
-}
+  ];
 
+  // Delete function
+const deleteEntity = async ({ type, url, onSuccess, onError }) => {
+
+  const confirmed = window.confirm(
+    `Are you sure you want to delete this ${type}?`
+  );
+
+  if (!confirmed) return;
+
+  try {
+    const res = await fetch(url, {
+      method: "DELETE",
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to delete ${type}`);
+    }
+
+    if (typeof onSuccess === "function") {
+      onSuccess();
+    }
+
+    refetch();
+
+  } catch (error) {
+    console.error(error);
+    if(typeof onError === "function"){
+      onError(error);
+    }
+    else alert(error.message);
+  }
+};
+
+
+  return (
+    <LeadContext.Provider
+      value={{
+        leadData,
+        loading,
+        error,
+        refetchLeads: refetch,
+        uniqueSalesAgentName,
+        deleteEntity,
+      }}
+    >
+      {children}
+    </LeadContext.Provider>
+  );
+}
