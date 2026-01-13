@@ -15,7 +15,7 @@ import LeadProvider from './contexts/leadContext';
 import AgentProvider from './contexts/agentContext';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap-icons/font/bootstrap-icons.css";
+// import "bootstrap-icons/font/bootstrap-icons.css";
 import { Toaster } from "react-hot-toast";
 
 export default function App(){
