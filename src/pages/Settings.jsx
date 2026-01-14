@@ -26,8 +26,8 @@ function SettingsCard({ title, subtitle, actions }) {
 /* ================= SETTINGS PAGE ================= */
 
 export default function Settings() {
-  const { leadData, deleteEntity } = useLeadContext();
-  const { agents } = useAgentContext();
+  const { leadData, deleteEntityLead } = useLeadContext();
+  const { agents, deleteEntityAgent } = useAgentContext();
 
   return (
     <div>
@@ -77,7 +77,7 @@ export default function Settings() {
                       <button
                         className="btn btn-outline-danger btn-sm"
                         onClick={() =>
-                          deleteEntity({
+                          deleteEntityLead({
                             type: "lead",
                             url: `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}`,
                             onSuccess: () =>
@@ -123,7 +123,7 @@ export default function Settings() {
                       <button
                         className="btn btn-outline-danger btn-sm"
                         onClick={() =>
-                          deleteEntity({
+                          deleteEntityAgent({
                             type: "agent",
                             url: `https://crm-backend-pi-six.vercel.app/api/agents/${agent._id}`,
                             onSuccess: () =>

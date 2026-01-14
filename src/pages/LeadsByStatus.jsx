@@ -199,11 +199,6 @@ export default function LeadByStatus() {
         <h1 className="fw-bold mb-3">Anvaya CRM Reports</h1>
 
         <section>
-          <h4 className="mb-3">Status: {quickFilter.status || "All"}</h4>
-          <LeadList leads={processedLead} />
-        </section> 
-
-        <section>
           <Filters
             quickFilter={quickFilter}
             setQuickFilter={setQuickFilter}
@@ -214,6 +209,12 @@ export default function LeadByStatus() {
         <section>
           <SortControls setSortType={setSortType} />
         </section>
+        <section>
+          <h4 className="mb-3">Status: {quickFilter.status || "All"}</h4>
+          <LeadList leads={processedLead} />
+        </section> 
+
+        
       </main>
       <Footer />
     </div>

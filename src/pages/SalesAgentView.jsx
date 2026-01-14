@@ -171,6 +171,32 @@ function AgentSection({ agentName, leadData }) {
   );
 }
 
+/* ================= Sales agent select ================= */
+function SalesAgentSelect({ agents, value, onChange }) {
+  if (agents.length === 0) {
+    return (
+      <Link to="/">
+        <button>Add a new Sales Agent</button>
+      </Link>
+    );
+  }
+
+  return (
+    <select 
+      className="form-select"
+      value={value} 
+      onChange={onChange} 
+      required
+    >
+      <option value="">Select Agent</option>
+      {agents.map((a) => (
+        <option key={a._id} value={a._id}>
+          {a.name}
+        </option>
+      ))}
+    </select>
+  );
+}
 /* ================= MAIN ================= */
 
 export default function SalesAgentView() {
@@ -182,6 +208,9 @@ export default function SalesAgentView() {
   const { data: agentsRes, loading } = useFetch(urlAgents, {
     allAgents: [],
   });
+
+  const [selectedAgent, setSelectedAgent] = useState("all");
+
 
   if (loading) return <p>Loading agents...</p>;
 
@@ -200,13 +229,39 @@ export default function SalesAgentView() {
       <MobileSidebar />
       <h2 className="fw-bold mb-4"> Leads by Sales Agent View</h2>
 
-        {agentsRes.allAgents.map((agent) => (
-          <AgentSection
-            key={agent._id}
-            agentName={agent.name}
-            leadData={leadData}
-          />
+        <div className="mb-4">
+          <label className="form-label small text-muted">
+            Filter by Sales Agent
+          </label>
+
+          <select
+            className="form-select form-select-sm"
+            value={selectedAgent}
+            onChange={(e) => setSelectedAgent(e.target.value)}
+          >
+            <option value="all">All Agents</option>
+
+            {agentsRes.allAgents.map((agent) => (
+              <option key={agent._id} value={agent.name}>
+                {agent.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+
+        {agentsRes.allAgents
+          .filter(
+            (agent) =>
+              selectedAgent === "all" || agent.name === selectedAgent
+          ).map((agent) => (
+            <AgentSection
+              key={agent._id}
+              agentName={agent.name}
+              leadData={leadData}
+            />
         ))}
+
     </main>
       
     <footer>

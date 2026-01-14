@@ -5,6 +5,9 @@ import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
+import toast from "react-hot-toast";
+import { useAgentContext } from "../contexts/agentContext";
+
 /* ================= FORM STATUS ================= */
 
 function FormStatus({ error, success }) {
@@ -77,6 +80,8 @@ export default function NewSalesAgent() {
   
   const NAVBAR_HEIGHT = 64;
   const SIDEBAR_WIDTH = 220;
+
+  const { refetchAgents } = useAgentContext();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -111,6 +116,8 @@ export default function NewSalesAgent() {
       await response.json();
 
       setFormData({ name: "", email: "" });
+      toast.success("Agent added successfully");
+      refetchAgents();
       setSuccess(true);
       setFetching(false);
     } catch (err) {

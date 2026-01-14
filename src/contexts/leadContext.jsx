@@ -32,41 +32,62 @@ export default function LeadProvider({ children }) {
   ];
 
   // Delete function
-  const deleteEntity = async ({ type, url, onSuccess, onError, updateState }) => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete this ${type}?`
+const deleteEntityLead = async ({
+    type,
+    url,
+    onSuccess,
+    onError,
+    updateState,
+  }) => {
+    toast(
+      (t) => (
+        <div>
+          <p className="mb-2">
+            Are you sure you want to delete this <b>{type}</b>?
+          </p>
+
+          <div className="d-flex gap-2 justify-content-end">
+            <button
+              className="btn btn-sm btn-secondary"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Cancel
+            </button>
+
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={async () => {
+                toast.dismiss(t.id);
+
+                try {
+                  const res = await fetch(url, { method: "DELETE" });
+
+                  if (!res.ok) {
+                    const data = await res.json();
+                    throw new Error(data?.error || `Failed to delete ${type}`);
+                  }
+
+                  // optimistic update
+                  updateState?.();
+                  onSuccess?.();
+
+                  setTimeout(() => refetch(), 300);
+                } catch (err) {
+                  console.error(err);
+                  onError?.(err);
+                  toast.error(err.message);
+                }
+              }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 6000 }
     );
-    if (!confirmed) return;
-
-    try {
-      const res = await fetch(url, { method: "DELETE" });
-
-      if (!res.ok) {
-        const data = await res.json();
-        throw new Error(data?.error || `Failed to delete ${type}`);
-      }
-
-      // ✅ optimistic update
-      if (typeof updateState === "function") {
-        updateState();
-      }
-
-      if (typeof onSuccess === "function") {
-        onSuccess();
-      }
-
-      // optional: refetch AFTER optimistic update
-      setTimeout(() => refetch(), 300);
-
-    } catch (error) {
-      console.error(error);
-      if (typeof onError === "function") {
-        onError(error);
-      } else {
-        alert(error.message);
-      }
-    }
   };
+
 
   return (
     <LeadContext.Provider
@@ -76,7 +97,7 @@ export default function LeadProvider({ children }) {
         error,
         refetchLeads: refetch,
         uniqueSalesAgentName,
-        deleteEntity,
+        deleteEntityLead,
       }}
     >
       {children}

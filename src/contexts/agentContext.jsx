@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
+import { toast } from "react-hot-toast";
 
 const AgentContext = createContext();
 export const useAgentContext = () => useContext(AgentContext);
@@ -28,6 +29,63 @@ export default function AgentProvider({ children }) {
       );
     }
   }, [data]);
+  
+  //delete function
+  const deleteEntityAgent = async ({
+      type,
+      url,
+      onSuccess,
+      onError,
+      updateState,
+    }) => {
+      toast(
+        (t) => (
+          <div>
+            <p className="mb-2">
+              Are you sure you want to delete this <b>{type}</b>?
+            </p>
+
+            <div className="d-flex gap-2 justify-content-end">
+              <button
+                className="btn btn-sm btn-secondary"
+                onClick={() => toast.dismiss(t.id)}
+              >
+                Cancel
+              </button>
+
+              <button
+                className="btn btn-sm btn-danger"
+                onClick={async () => {
+                  toast.dismiss(t.id);
+
+                  try {
+                    const res = await fetch(url, { method: "DELETE" });
+
+                    if (!res.ok) {
+                      const data = await res.json();
+                      throw new Error(data?.error || `Failed to delete ${type}`);
+                    }
+
+                    // optimistic update
+                    updateState?.();
+                    onSuccess?.();
+
+                    setTimeout(() => refetch(), 300);
+                  } catch (err) {
+                    console.error(err);
+                    onError?.(err);
+                    toast.error(err.message);
+                  }
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        ),
+        { duration: 6000 }
+      );
+    };
 
   return (
     <AgentContext.Provider
@@ -36,6 +94,7 @@ export default function AgentProvider({ children }) {
         loading,
         error,
         refetchAgents: refetch,
+        deleteEntityAgent,
       }}
     >
       {children}

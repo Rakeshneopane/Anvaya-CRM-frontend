@@ -77,7 +77,7 @@ function ChartCanvas({ type, labels, data }) {
 function StatusBreakdown({ statusCount, total }) {
   return (
     <ChartCard title="Lead Status Breakdown">
-      <div className="d-flex flex-column gap-3">
+      <div className="d-flex flex-column gap-3 mb-3">
         {Object.entries(statusCount).map(([status, count]) => {
           const percent = ((count / total) * 100).toFixed(1);
           return (

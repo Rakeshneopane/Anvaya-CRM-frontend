@@ -1,6 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
 import { Link, useParams } from "react-router-dom";
+
+import { toast } from "react-hot-toast"; 
+import { useLeadContext } from "../contexts/leadContext";
 
 import Navbar from "../components/Header";
 import Sidebar from "../components/SideBar";
@@ -225,6 +228,8 @@ export default function NewLead() {
   const { leadId } = useParams();
   const isEditMode = !!leadId;
 
+  const { refetchLeads } = useLeadContext();
+
   const { data: salesAgentFetch } = useFetch(
     "https://crm-backend-pi-six.vercel.app/api/agents",
     { allAgents: [] }
@@ -238,7 +243,7 @@ export default function NewLead() {
   const tags = tagsFetch?.allTags || [];
 
   const leadUrl = isEditMode
-    ? `hhttps://crm-backend-pi-six.vercel.app/api/lead/${leadId}`
+    ? `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}`
     : null;
 
   const { data: leadFetch } = useFetch(leadUrl, {});
@@ -293,7 +298,8 @@ export default function NewLead() {
           tags: "",
         });
       }
-
+      toast.success(isEditMode ? "Lead updated successfully" : "Lead added successfully");
+      refetchLeads();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
     } catch {
