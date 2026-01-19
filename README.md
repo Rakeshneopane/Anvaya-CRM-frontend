@@ -1,16 +1,86 @@
-# React + Vite
+# Anvaya CRM – Frontend Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This repository contains the **frontend application** for the **Anvaya CRM system**.  
+It is built using **React.js** and provides a user interface for managing **leads, sales agents, reports, and CRM workflows**.
 
-Currently, two official plugins are available:
+The frontend communicates with the backend APIs to fetch and manage CRM data.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Single Page Application built with React
+- Lead management (add, list, and filter leads)
+- Sales agent management
+- Reports and dashboard views
+- Global state management using Context API
+- Reusable component-based UI
+- Responsive sidebar and mobile-friendly layout
+- Backend API integration
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## 🛠️ Tech Stack
+
+- **Library:** React.js  
+- **State Management:** Context API  
+- **Routing:** React Router  
+- **Styling:** CSS  
+- **Build Tool:** Vite  
+- **API Communication:** Fetch API  
+
+---
+
+## Base URL
+```
+http://localhost:3000/api
+```
+## Getting Started|
+
+**Clone the repository**
+```
+git clone <your-frontend-repo-url>
+```
+**install Dependency**
+```
+npm install
+```
+**Run the Application**
+```
+npm run dev
+```
+**Application available at**
+```
+http://localhost:5173
+```
+
+## API Integration
+
+**API base url**
+```
+/api
+```
+
+Example:
+```
+/api/leads
+/api/agents
+/api/tags
+/api/reports
+
+```
+---
+## Application Flow
+
+- The React application starts from main.jsx
+- Global state is initialized using Context Providers
+- Pages fetch data from backend APIs
+- Components render data and handle user interactions
+- UI updates automatically based on state changes
+
+---
+
+👨‍💻 Author
+
+Rakesh Neopane
+Frontend Developer
