@@ -123,4 +123,4 @@ For bugs, feedback, or feature requests, please reach out to:
 
 ## Screen Shots
 
-![alt text](image1.png)
+![alt text](./src/assets/image1.png)
