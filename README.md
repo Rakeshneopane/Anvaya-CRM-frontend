@@ -9,7 +9,7 @@ Built with a React frontend, Express/Node backend, MongoDB database.
 
 ## 🌐 Demo Link  
 
-**Live Demo:** ``` https://crm-frontend-ten-nu.vercel.app/ ```
+**Live Demo:** https://crm-frontend-ten-nu.vercel.app/
 
 ---
 
@@ -35,7 +35,7 @@ npm run dev
 ## 🎥 Demo Video
 
 ### Watch a walkthrough covering all major features of this CRM:
-- Loom Video Link: https://loom.com/your-video-link
+- Loom Video Link:  https://www.loom.com/share/01ec0a872c6f4316ad0ecd71b48de80c
 
 ---
 

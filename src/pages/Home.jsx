@@ -151,7 +151,7 @@ export default function Home() {
   const SIDEBAR_WIDTH = 220;
   const RIGHT_PANEL_WIDTH = 260;
 
-  const { leadData, deleteEntity } = useLeadContext();
+  const { leadData, deleteEntityLead } = useLeadContext();
 
   const [quickFilter, setQuickFilter] = useState({
     status: "",
@@ -200,7 +200,7 @@ export default function Home() {
             setQuickFilter={setQuickFilter}
           />
           
-          <LeadList leads={processedLead} deleteLead ={deleteEntity} />
+          <LeadList leads={processedLead} deleteLead ={deleteEntityLead} />
 
           <Link to="/newLead" className="btn btn-dark my-4" style={{width: "100%"}}>Add New Lead</Link>
         </main>
