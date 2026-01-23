@@ -1,27 +1,22 @@
 # Anvaya CRM System  
 
-A full-stack Customer Relationship Management (CRM) application that helps manage customers, leads, and interactions efficiently.  
+A full-stack Customer Relationship Management (CRM) application that helps manage customers, leads, and interactions efficiently.
 Users can add, view, edit, and track customers, manage leads, and monitor follow-ups through a secure dashboard.
 
-Built with a React frontend, Express/Node backend, MongoDB database.
+Built with a React frontend, Node.js/Express backend, and MongoDB database.
 
----
+## 🌐 Demo Link
 
-## 🌐 Demo Link  
+- Live Demo: https://crm-frontend-ten-nu.vercel.app/ <br/>
+- Backend API: https://crm-backend-pi-six.vercel.app/
 
-**Live Demo:** https://crm-frontend-ten-nu.vercel.app/
-
----
-
-## ⚡ Quick Start  
-
-```bash
-git clone https://github.com/Rakeshneopane/CRM-frontend.git
-cd my CRM frontend
-npm install
-npm run dev 
+##⚡ Quick Start
 ```
----
+git clone https://github.com/Rakeshneopane/CRM-frontend.git
+cd crm-frontend
+npm install
+npm run dev
+```
 
 ## Technologies
 - React JS
@@ -29,45 +24,69 @@ npm run dev
 - Node.js
 - Express
 - MongoDB
-
----
+- JavaScript (ES6+)
+- REST APIs
+- Bootstrap
 
 ## 🎥 Demo Video
-
-### Watch a walkthrough covering all major features of this CRM:
-- Loom Video Link:  https://www.loom.com/share/01ec0a872c6f4316ad0ecd71b48de80c
-
----
+Watch a walkthrough covering all major features of this CRM:
+- Loom Video Link: https://www.loom.com/share/01ec0a872c6f4316ad0ecd71b48de80c
 
 ## ✨ Features
-
 ### Dashboard
-- Overview of total leads, agents and follow-ups
-- Recent activity and quick actions
+- Views an overview of total leads, agents, and follow-ups
+- Shows recent activity and quick actions
 
 ### Lead Management
-- View a list of all leads
-- Search customers by name or email in real time
-- Add new customers with contact details
-- Create and track leads
-- Update lead status (New, Contacted, Converted, Lost)
-- Assign notes and follow-up dates
-- Lead Details
-- View complete customer information
-- Edit customer details
-- View interaction history and notes
+- Views a list of all leads
+- Searches customers by name or email in real time
+- Adds new customers with contact details
+- Creates and tracks leads
+- Updates lead status (New, Contacted, Converted, Lost)
+- Assigns notes and follow-up dates
+
+### Lead Details
+- Views complete customer information
+- Edits customer details
+- Views interaction history and comments
+
+## 🔐 Environment Setup
+
+### Frontend Environment Variables
+
+Create a .env file in the root of the frontend project.
+- VITE_API_BASE_URL=https://your-crm-backend-url.vercel.app
 
 
----
+**Restart the dev server after updating .env.**
 
-## 📡 API Reference
+## 📡 API Endpoints Used
+### Agents
+- POST /agents – Create a new agent
+- GET /agents – Fetch all agents
+- DELETE /agents/:id – Delete an agent
 
-- GET /api/leads
-- Retrieve all leads
+### Leads
+- POST /lead – Create a new lead
+- GET /leads – Fetch all leads
+- GET /lead/:id – Fetch lead by ID
+- PUT /lead/:id – Update lead
+- DELETE /lead/:id – Delete lead
 
-- Sample Response: 
+### Lead Comments
+- POST /lead/:id/comments – Add a comment
+- GET /lead/:id/comments – Fetch comments
+- DELETE /lead/:leadId/comments/:commentId – Delete comment
+
+### Tags
+- POST /tags – Create a tag
+- GET /tags – Fetch all tags
+- DELETE /tags/:id – Delete a tag
+
+### Sample Response
 ```
-"leads": [
+{
+  "leads": [
     {
       "_id": "6940dd24cde32b58fd39a82e",
       "name": "Mandeep",
@@ -94,33 +113,27 @@ npm run dev
       "updatedAt": "2025-12-16T04:16:36.456Z",
       "__v": 0
     }
-    ]
+  ]
+}
 ```
 
-- GET /api/customers/:id <br>
-Get details of a single customer
+## Screen Shots
 
-- POST /api/lead <br>
-Create a new lead (protected)
+![alt text](./src/assets/image1.png)
+![alt text](./src/assets/image2.png)
+![alt text](./src/assets/image3.png)
+![alt text](./src/assets/image.png)
 
----
-
-## Contact
-
-For bugs, feedback, or feature requests, please reach out to:
-📧 rakeshneopane@gmail.com or lucasneopane123@gmail.com
-
----
-
-## Future Improvements
+## 🚀 Future Improvements
 - JWT based Authentication
 - Role-based access control (Admin, Sales, Support)
 - Email and notification reminders for follow-ups
 - Advanced analytics and reporting dashboard
 - Import/export customers via CSV
 
----
+## 📬 Contact
 
-## Screen Shots
-
-![alt text](./src/assets/image1.png)
+For bugs, feedback, or feature requests, please reach out to:
+📧 rakeshneopane@gmail.com
+ or lucasneopane123@gmail.com <br/>
+LinkedIn: https://linkedin.com/in/rakesh-neopane
