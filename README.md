@@ -57,8 +57,17 @@ Watch a walkthrough covering all major features of this CRM:
 Create a .env file in the root of the frontend project.
 - VITE_API_BASE_URL=https://your-crm-backend-url.vercel.app
 
+### Backend Environment Variables
+
+#### Server
+- PORT=4000
+- NODE_ENV=development
+#### Database
+- MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/anvaya 
+
 
 **Restart the dev server after updating .env.**
+# Add .env to .gitignore
 
 ## 📡 API Endpoints Used
 ### Agents
