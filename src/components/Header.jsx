@@ -1,4 +1,4 @@
-
+import { UserButton } from '@clerk/clerk-react'
 import { useState,useEffect } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 
@@ -172,6 +172,9 @@ export default function Navbar({leads}) {
                         >
                             Settings
                         </NavLink>
+                    </li>
+                    <li className="nav-item mb-2 mb-lg-0 d-flex align-items-center">
+                        <UserButton afterSignOutUrl="/login" />
                     </li>
                 </ul>
             </div>

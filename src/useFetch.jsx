@@ -1,9 +1,13 @@
 import { useEffect, useState, useCallback } from "react";
 
+import { useAuth } from '@clerk/clerk-react'
+
 export const useFetch = (url, initialData) => {
   const [data, setData] = useState(initialData);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const { getToken } = useAuth()
 
   const fetchData = useCallback(() => {
     if (!url) return;
@@ -14,7 +18,13 @@ export const useFetch = (url, initialData) => {
 
     async function run() {
       try {
-        const response = await fetch(url);
+        const token = await getToken()
+        const response = await fetch( url, {
+              headers: {
+                  Authorization: `Bearer ${token}`
+              }
+          } 
+        );
         const json = await response.json();
         if (active) setData(json);
       } catch (err) {

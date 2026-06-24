@@ -15,8 +15,10 @@ import LeadProvider from './contexts/leadContext';
 import AgentProvider from './contexts/agentContext';
 
 import "bootstrap/dist/css/bootstrap.min.css";
-// import "bootstrap-icons/font/bootstrap-icons.css";
+
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
+import { Login, Signup } from './pages/Login.jsx';
 
 export default function App(){
   return(
@@ -24,19 +26,27 @@ export default function App(){
       <Toaster position="top-right" />
       <LeadProvider>
         <AgentProvider>
+          
           <Routes>
-            <Route path="/" element={<Home />}></Route>
-            <Route path="/leadManagement/:leadId" element={<LeadManagement />}></Route>
-            <Route path="/addNewSalesAgent" element={<AddNewSalesAgent />}></Route>
-            <Route path="/leadList" element={<LeadList />}></Route>
-            <Route path="/leadsByStatus" element={<LeadsByStatus />}></Route>
-            <Route path="/newLead" element={<NewLead />}></Route>
-            <Route path="/editLead/:leadId" element={<NewLead />}></Route>
-            <Route path="/reports" element={<Reports />}></Route>
-            <Route path="/SalesAgentView" element={<SalesAgentView />}></Route>
-            <Route path="/SalesManagement" element={<SalesManagement />}></Route>
-            <Route path="/Settings" element={<Settings />}></Route>
-          </Routes>
+            <Route path="/login/*" element={<Login />}></Route>
+            <Route path="/signup/*" element={<Signup />}></Route>
+            <Route path="/" element={ <ProtectedRoute> <Home /> </ProtectedRoute> }></Route>
+            <Route path="/leadManagement/:leadId" element={ <ProtectedRoute>  <LeadManagement /> </ProtectedRoute>}></Route>
+            <Route path="/addNewSalesAgent" element={<ProtectedRoute> <AddNewSalesAgent /> </ProtectedRoute>}></Route>
+            <Route path="/leadList" element={<ProtectedRoute> <LeadList /> </ProtectedRoute>}></Route>
+            <Route path="/leadsByStatus" element={ <ProtectedRoute> <LeadsByStatus /> </ProtectedRoute> }></Route>
+            <Route path="/newLead" element={ <ProtectedRoute> <NewLead /> </ProtectedRoute> }></Route>
+            <Route path="/editLead/:leadId" element={<ProtectedRoute> <NewLead /> </ProtectedRoute>}></Route>
+            <Route path="/reports" element={<ProtectedRoute> <Reports /> </ProtectedRoute>}></Route>
+            <Route path="/SalesAgentView" element={<ProtectedRoute><SalesAgentView /> </ProtectedRoute>}></Route>
+            <Route path="/SalesManagement" element={<ProtectedRoute> <SalesManagement /> </ProtectedRoute>}></Route>
+            <Route path="/Settings" element={<ProtectedRoute> <Settings /> </ProtectedRoute>}></Route>
+            {/* <Route path="/unauthorized-sign-in" element={<UnauthorizedSignIn />} /> */}
+            <Route
+              path="/login/sso-callback"
+              element={<div>SSO callback reached</div>}
+            />
+          </Routes> 
         </AgentProvider>
       </LeadProvider>
     </div>
