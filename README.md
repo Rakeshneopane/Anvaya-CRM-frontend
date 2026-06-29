@@ -5,20 +5,10 @@ Users can add, view, edit, and track customers, manage leads, and monitor follow
 
 Built with a React frontend, Node.js/Express backend, and MongoDB database.
 
-## 🌐 Demo Link
-
-- Live Demo: https://crm-frontend-ten-nu.vercel.app/ <br/>
-- Backend API: https://crm-backend-pi-six.vercel.app/
-
-##⚡ Quick Start
-```
-git clone https://github.com/Rakeshneopane/CRM-frontend.git
-cd crm-frontend
-npm install
-npm run dev
-```
+---
 
 ## Technologies
+
 - React JS
 - React Router
 - Node.js
@@ -27,18 +17,96 @@ npm run dev
 - JavaScript (ES6+)
 - REST APIs
 - Bootstrap
+- Clerk Authentication
 
-## 🎥 Demo Video
-Watch a walkthrough covering all major features of this CRM:
-- Loom Video Link: https://www.loom.com/share/01ec0a872c6f4316ad0ecd71b48de80c
+---
+
+## Demo
+
+- **Frontend:** [Live Demo](https://crm-frontend-ten-nu.vercel.app/)
+- **Backend API:** [Backend API](https://crm-backend-pi-six.vercel.app/)
+- 🎥 **Loom Walkthrough:** [Watch Here](https://www.loom.com/share/01ec0a872c6f4316ad0ecd71b48de80c)
+
+---
+
+## Authentication
+
+This application uses **Clerk Authentication**.
+
+Click **Sign In** to authenticate using your Google account (or email/password if enabled) and access the CRM dashboard.
+
+---
+
+## ⚡ Quick Start
+
+### 1. Clone and run the backend
+
+```bash
+git clone https://github.com/Rakeshneopane/Anvaya-CRM-backend.git
+cd Anvaya-CRM-backend
+npm install
+npm run dev
+```
+
+### 2. Clone and run the frontend
+
+Open a second terminal:
+
+```bash
+git clone https://github.com/Rakeshneopane/Anvaya-CRM-frontend.git
+cd Anvaya-CRM-frontend
+npm install
+npm run dev
+```
+
+The frontend communicates with the backend running on `http://localhost:4000`.
+
+---
+
+## 🔐 Environment Setup
+
+### Frontend
+
+Create a `.env` file inside the frontend project:
+
+```env
+VITE_API_BASE_URL=http://localhost:4000
+```
+
+For production:
+
+```env
+VITE_API_BASE_URL=https://crm-backend-pi-six.vercel.app
+```
+
+### Backend
+
+Create a `.env` file inside the backend project:
+
+```env
+PORT=4000
+NODE_ENV=development
+
+MONGODB_URI=your_mongodb_connection_string
+```
+
+For production, replace the localhost URLs with your deployed backend URL.
+
+> **Note:**
+>
+> - Restart the development server after updating the `.env` file.
+> - Add `.env` to `.gitignore` to avoid committing sensitive credentials.
+
+---
 
 ## ✨ Features
+
 ### Dashboard
-- Views an overview of total leads, agents, and follow-ups
-- Shows recent activity and quick actions
+- Displays an overview of total leads, agents, and follow-ups
+- Displays recent activity and quick actions
 
 ### Lead Management
-- Views a list of all leads
+- Displays a list of all leads
 - Searches customers by name or email in real time
 - Adds new customers with contact details
 - Creates and tracks leads
@@ -46,53 +114,37 @@ Watch a walkthrough covering all major features of this CRM:
 - Assigns notes and follow-up dates
 
 ### Lead Details
-- Views complete customer information
-- Edits customer details
-- Views interaction history and comments
+- Displays complete customer information
+- Updates customer details
+- Displays interaction history and comments
 
-## 🔐 Environment Setup
+---
 
-### Frontend Environment Variables
+## 📡 API Reference
 
-Create a .env file in the root of the frontend project.
-- VITE_API_BASE_URL=https://your-crm-backend-url.vercel.app
-
-### Backend Environment Variables
-
-#### Server
-- PORT=4000
-- NODE_ENV=development
-#### Database
-- MONGODB_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/anvaya 
-
-
-**Restart the dev server after updating .env.**
-# Add .env to .gitignore
-
-## 📡 API Endpoints Used
 ### Agents
-- POST /agents – Create a new agent
-- GET /agents – Fetch all agents
-- DELETE /agents/:id – Delete an agent
+- `POST /agents` – Create a new agent
+- `GET /agents` – Fetch all agents
+- `DELETE /agents/:id` – Delete an agent
 
 ### Leads
-- POST /lead – Create a new lead
-- GET /leads – Fetch all leads
-- GET /lead/:id – Fetch lead by ID
-- PUT /lead/:id – Update lead
-- DELETE /lead/:id – Delete lead
+- `POST /lead` – Create a new lead
+- `GET /leads` – Fetch all leads
+- `GET /lead/:id` – Fetch lead by ID
+- `PUT /lead/:id` – Update lead
+- `DELETE /lead/:id` – Delete lead
 
 ### Lead Comments
-- POST /lead/:id/comments – Add a comment
-- GET /lead/:id/comments – Fetch comments
-- DELETE /lead/:leadId/comments/:commentId – Delete comment
+- `POST /lead/:id/comments` – Add a comment
+- `GET /lead/:id/comments` – Fetch comments
+- `DELETE /lead/:leadId/comments/:commentId` – Delete comment
 
 ### Tags
-- POST /tags – Create a tag
-- GET /tags – Fetch all tags
-- DELETE /tags/:id – Delete a tag
+- `POST /tags` – Create a tag
+- `GET /tags` – Fetch all tags
+- `DELETE /tags/:id` – Delete a tag
 
-### Sample Response
+### Sample Response (`GET /leads`)
 ```
 {
   "leads": [
@@ -126,23 +178,30 @@ Create a .env file in the root of the frontend project.
 }
 ```
 
-## Screen Shots
+---
 
-![alt text](./src/assets/image1.png)
-![alt text](./src/assets/image2.png)
-![alt text](./src/assets/image3.png)
-![alt text](./src/assets/image.png)
+## 📷 Screenshots
+
+![DashBoard](./src/assets/image1.png)
+![Lead List](./src/assets/image2.png)
+![Lead Details](./src/assets/image3.png)
+![Reports](./src/assets/image.png)
+
+---
 
 ## 🚀 Future Improvements
-- JWT based Authentication
-- Role-based access control (Admin, Sales, Support)
+
+- Fine-grained role-based access control (Admin, Sales, Support)
 - Email and notification reminders for follow-ups
 - Advanced analytics and reporting dashboard
 - Import/export customers via CSV
 
+---
+
 ## 📬 Contact
 
-For bugs, feedback, or feature requests, please reach out to:
-📧 rakeshneopane@gmail.com
- or lucasneopane123@gmail.com <br/>
-LinkedIn: https://linkedin.com/in/rakesh-neopane
+For bugs, feedback, or feature requests, feel free to reach out:
+
+- 📧 Email: rakeshneopane@gmail.com
+- 📧 Alternate Email: lucasneopane123@gmail.com
+- 💼 LinkedIn: https://linkedin.com/in/rakesh-neopane
