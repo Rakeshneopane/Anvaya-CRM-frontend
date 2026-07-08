@@ -48,7 +48,7 @@ function Filters({ quickFilter, setQuickFilter, agents }) {
         {/* Status Filter */}
         <div className="mb-3">
           <div className="small text-muted mb-2">Status</div>
-          <div className="btn-group btn-group-sm felx-wrap">
+          <div className="btn-group btn-group-sm flex-wrap">
             {statuses.map((status)=>(
               <button
                 key={status || "all"}
@@ -175,7 +175,7 @@ export default function LeadListPage() {
     });
 
   return (
-    <div>
+    <div className="page-wrapper">
       <header>
         <Navbar />
       </header>

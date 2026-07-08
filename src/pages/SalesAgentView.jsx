@@ -1,6 +1,4 @@
 import { useState, useMemo } from "react";
-import { useLeadContext } from "../contexts/leadContext";
-import { useFetch } from "../useFetch";
 import { Link } from "react-router-dom";
 
 import Navbar from "../components/Header"
@@ -8,15 +6,8 @@ import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
-/* ================= SIDEBAR ================= */
-
-// function Sidebar() {
-//   return (
-//     <aside>
-//       <Link to="/">Back to Dashboard</Link>
-//     </aside>
-//   );
-// }
+import { useLeadContext } from "../contexts/leadContext";
+import { useAgentContext } from "../contexts/agentContext";
 
 /* ================= AGENT FILTERS ================= */
 
@@ -171,32 +162,6 @@ function AgentSection({ agentName, leadData }) {
   );
 }
 
-/* ================= Sales agent select ================= */
-function SalesAgentSelect({ agents, value, onChange }) {
-  if (agents.length === 0) {
-    return (
-      <Link to="/">
-        <button>Add a new Sales Agent</button>
-      </Link>
-    );
-  }
-
-  return (
-    <select 
-      className="form-select"
-      value={value} 
-      onChange={onChange} 
-      required
-    >
-      <option value="">Select Agent</option>
-      {agents.map((a) => (
-        <option key={a._id} value={a._id}>
-          {a.name}
-        </option>
-      ))}
-    </select>
-  );
-}
 /* ================= MAIN ================= */
 
 export default function SalesAgentView() {
@@ -204,10 +169,7 @@ export default function SalesAgentView() {
   const SIDEBAR_WIDTH = 220;
   const { leadData } = useLeadContext();
 
-  const urlAgents = "https://crm-backend-pi-six.vercel.app/api/agents";
-  const { data: agentsRes, loading } = useFetch(urlAgents, {
-    allAgents: [],
-  });
+  const { agents, loading } = useAgentContext();
 
   const [selectedAgent, setSelectedAgent] = useState("all");
 
@@ -215,7 +177,7 @@ export default function SalesAgentView() {
   if (loading) return <p>Loading agents...</p>;
 
   return (
-    <div>
+    <div className="page-wrapper">
       <header>
         <Navbar />
       </header>
@@ -241,7 +203,7 @@ export default function SalesAgentView() {
           >
             <option value="all">All Agents</option>
 
-            {agentsRes.allAgents.map((agent) => (
+            {agents.map((agent) => (
               <option key={agent._id} value={agent.name}>
                 {agent.name}
               </option>
@@ -250,7 +212,7 @@ export default function SalesAgentView() {
         </div>
 
 
-        {agentsRes.allAgents
+        {agents
           .filter(
             (agent) =>
               selectedAgent === "all" || agent.name === selectedAgent

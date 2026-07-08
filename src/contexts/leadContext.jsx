@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
 import { toast } from "react-hot-toast";
+import { useAuthFetch } from "../utils/useAuthFetch";
 
 const LeadContext = createContext();
 export const useLeadContext = () => useContext(LeadContext);
 
 export default function LeadProvider({ children }) {
   const url = "https://crm-backend-pi-six.vercel.app/api/leads";
+
+  const authFetch = useAuthFetch();
 
   // hydrate from localStorage FIRST
   const [leadData, setLeadData] = useState(() => {
@@ -60,7 +63,7 @@ const deleteEntityLead = async ({
                 toast.dismiss(t.id);
 
                 try {
-                  const res = await fetch(url, { method: "DELETE" });
+                  const res = await authFetch(url, { method: "DELETE" });
 
                   if (!res.ok) {
                     const data = await res.json();

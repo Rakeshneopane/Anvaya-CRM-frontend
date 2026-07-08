@@ -1,12 +1,15 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
 import { toast } from "react-hot-toast";
+import { useAuthFetch } from "../utils/useAuthFetch";
 
 const AgentContext = createContext();
 export const useAgentContext = () => useContext(AgentContext);
 
 export default function AgentProvider({ children }) {
   const url = "https://crm-backend-pi-six.vercel.app/api/agents";
+  
+  const authFetch = useAuthFetch();
 
   // hydrate from localStorage FIRST
   const [agents, setAgents] = useState(() => {
@@ -59,7 +62,7 @@ export default function AgentProvider({ children }) {
                   toast.dismiss(t.id);
 
                   try {
-                    const res = await fetch(url, { method: "DELETE" });
+                    const res = await authFetch(url, { method: "DELETE" });
 
                     if (!res.ok) {
                       const data = await res.json();
@@ -93,6 +96,7 @@ export default function AgentProvider({ children }) {
         agents,
         loading,
         error,
+        setAgents,
         refetchAgents: refetch,
         deleteEntityAgent,
       }}

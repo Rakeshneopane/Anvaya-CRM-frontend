@@ -1,22 +1,24 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useFetch } from "../useFetch";
 import { Link, useParams } from "react-router-dom";
 
 import { toast } from "react-hot-toast"; 
 import { useLeadContext } from "../contexts/leadContext";
+import { useAgentContext } from "../contexts/agentContext";
 
 import Navbar from "../components/Header";
 import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
+import { useAuthFetch } from "../utils/useAuthFetch";
 /* ================= SALES AGENT SELECT ================= */
 
 function SalesAgentSelect({ agents, value, onChange }) {
   if (agents.length === 0) {
     return (
-      <Link to="/">
-        <button>Add a new Sales Agent</button>
+      <Link to="/addNewSalesAgent"  className="form-control p-0 m-0">
+        <button className="btn btn-link text-decoration-none text-reset" > Add a new Sales Agent </button>
       </Link>
     );
   }
@@ -208,6 +210,9 @@ function FormStatus({ success, error, isEditMode }) {
 /* ================= MAIN ================= */
 
 export default function NewLead() {
+
+  const authFetch = useAuthFetch();
+
   const NAVBAR_HEIGHT = 64;
   const SIDEBAR_WIDTH = 220;
   
@@ -230,11 +235,7 @@ export default function NewLead() {
 
   const { refetchLeads } = useLeadContext();
 
-  const { data: salesAgentFetch } = useFetch(
-    "https://crm-backend-pi-six.vercel.app/api/agents",
-    { allAgents: [] }
-  );
-  const agents = salesAgentFetch?.allAgents || [];
+  const { agents } = useAgentContext();
 
   const { data: tagsFetch } = useFetch(
     "https://crm-backend-pi-six.vercel.app/api/tags",
@@ -271,15 +272,18 @@ export default function NewLead() {
     setFetching(true);
 
     try {
+      
       const url = isEditMode
         ? `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}`
         : `https://crm-backend-pi-six.vercel.app/api/lead`;
-
+      
       const method = isEditMode ? "PUT" : "POST";
 
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method,
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(formData),
       });
 
@@ -302,7 +306,8 @@ export default function NewLead() {
       refetchLeads();
       setSuccess(true);
       setTimeout(() => setSuccess(false), 3000);
-    } catch {
+    } catch(err) {
+      console.error(err, err.message);
       setError(true);
     } finally {
       setFetching(false);
@@ -310,7 +315,7 @@ export default function NewLead() {
   };
 
   return (
-  < div>
+  < div className="page-wrapper">
     {/* Sidebar (fixed width column) */}
     <Sidebar />
 

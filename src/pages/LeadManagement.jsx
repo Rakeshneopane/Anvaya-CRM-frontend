@@ -9,6 +9,7 @@ import Sidebar from "../components/SideBar";
 import Footer from "../components/footer";
 import MobileSidebar from "../components/MobileSidebar";
 
+import { useAuthFetch } from "../utils/useAuthFetch.js";
 
 /* ================= LEAD DETAILS ================= */
 
@@ -129,8 +130,9 @@ export default function LeadManagement() {
   const NAVBAR_HEIGHT = 64;
   const SIDEBAR_WIDTH = 220;
   
-  const { leadData, deleteEntity } = useLeadContext();
+  const { leadData, deleteEntityLead } = useLeadContext();
   const { leadId } = useParams();
+  const authFetch = useAuthFetch();
 
   const leadUrl = `https://crm-backend-pi-six.vercel.app/api/lead/${leadId}`;
   const { data: leadFetch } = useFetch(leadUrl, {});
@@ -173,7 +175,7 @@ export default function LeadManagement() {
       };
 
       const url = `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}/comments`;
-      const response = await fetch(url, {
+      const response = await authFetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -195,7 +197,7 @@ export default function LeadManagement() {
   };
 
   const handleDeleteComment = (comment) => {
-    deleteEntity({
+    deleteEntityLead({
       type: "comment",
       url: `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}/comments/${comment._id}`,
       onSuccess: () => {
@@ -213,7 +215,7 @@ export default function LeadManagement() {
   if (!lead) return <div>Loading...</div>;
 
   return (
-    <div>
+    <div className="page-wrapper">
       <header>
         <Navbar />
       </header>

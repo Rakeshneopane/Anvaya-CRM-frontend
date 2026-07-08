@@ -8,6 +8,7 @@ import MobileSidebar from "../components/MobileSidebar";
 import toast from "react-hot-toast";
 import { useAgentContext } from "../contexts/agentContext";
 
+import { useAuth } from "@clerk/clerk-react";
 /* ================= FORM STATUS ================= */
 
 function FormStatus({ error, success }) {
@@ -77,11 +78,12 @@ function AgentForm({ formData, setFormData, onSubmit, fetching }) {
 /* ================= MAIN ================= */
 
 export default function NewSalesAgent() {
-  
+
   const NAVBAR_HEIGHT = 64;
   const SIDEBAR_WIDTH = 220;
 
   const { refetchAgents } = useAgentContext();
+  const { getToken } = useAuth();
   
   const [formData, setFormData] = useState({
     name: "",
@@ -101,9 +103,15 @@ export default function NewSalesAgent() {
       setFetching(true);
       setError(false);
 
+       const token = await getToken();
+      if (!token) throw new Error("No auth token available");
+
       const response = await fetch(urlAgent, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+       },
         body: JSON.stringify(formData),
       });
 
@@ -135,7 +143,7 @@ export default function NewSalesAgent() {
   }, [success]);
 
   return (
-    <div>
+    <div className="page-wrapper">
       <header>
         <Navbar />
       </header>

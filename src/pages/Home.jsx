@@ -123,7 +123,7 @@ function QuickFilters({ quickFilter, setQuickFilter }) {
 
   return (
     <div className="mb-4">
-      <div className="btn-group btn-group-md" role="group">
+      <div className="btn-group btn-group-md flex-wrap" role="group">
         {statuses.map((status) => {
           const isActive = quickFilter.status === status;
 
@@ -175,7 +175,7 @@ export default function Home() {
   
 
   return (
-    <div>
+    <div className="page-wrapper">
         <header>
             <Navbar leads={processedLead}/>
         </header>

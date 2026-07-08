@@ -1,19 +1,34 @@
-/* Base layout: navbar + LEFT sidebar only */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Each page's outer wrapper (the <div> returned by every page component) */
+.page-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
 .main-content {
+  flex: 1 0 auto; /* grows to fill available space, pushing footer down */
   margin-top: 64px;
   padding: 1.5rem;
 }
 
-/* Desktop: LEFT sidebar for ALL pages */
+footer,
+.footer {
+  flex-shrink: 0; /* footer keeps its natural height, doesn't get squished */
+}
+
 @media (min-width: 992px) {
   .main-content {
-    margin-left: 220px; /* sidebar width */
+    margin-left: 220px;
   }
 }
 
-/* Desktop: RIGHT panel ONLY when needed */
 @media (min-width: 992px) {
   .with-right-panel {
-    margin-right: 260px; /* right panel width */
+    margin-right: 260px;
   }
 }

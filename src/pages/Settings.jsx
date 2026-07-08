@@ -26,11 +26,11 @@ function SettingsCard({ title, subtitle, actions }) {
 /* ================= SETTINGS PAGE ================= */
 
 export default function Settings() {
-  const { leadData, deleteEntityLead } = useLeadContext();
-  const { agents, deleteEntityAgent } = useAgentContext();
+  const { leadData, setLeadData, deleteEntityLead } = useLeadContext();
+  const { agents, setAgents, deleteEntityAgent } = useAgentContext();
 
   return (
-    <div>
+    <div className="page-wrapper">
       <Navbar />
       <Sidebar />
       
@@ -80,6 +80,8 @@ export default function Settings() {
                           deleteEntityLead({
                             type: "lead",
                             url: `https://crm-backend-pi-six.vercel.app/api/lead/${lead._id}`,
+                            updateState: () =>
+                              setLeadData((prev) => prev.filter((l) => l._id !== lead._id)),
                             onSuccess: () =>
                               toast.success("Lead deleted"),
                             onError: (e) =>
@@ -126,6 +128,8 @@ export default function Settings() {
                           deleteEntityAgent({
                             type: "agent",
                             url: `https://crm-backend-pi-six.vercel.app/api/agents/${agent._id}`,
+                            updateState: () =>
+                              setAgents((prev) => prev.filter((a) => a._id !== agent._id)),
                             onSuccess: () =>
                               toast.success("Agent deleted"),
                             onError: (e) =>

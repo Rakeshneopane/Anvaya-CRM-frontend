@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useFetch } from "../useFetch";
+import { useAgentContext } from "../contexts/agentContext"
 import { useLeadContext } from "../contexts/leadContext";
 
 import Navbar from "../components/Header"
@@ -72,11 +72,10 @@ export default function SalesManagement() {
 
   const { leadData } = useLeadContext();
 
-  const url = "https://crm-backend-pi-six.vercel.app/api/agents";
-  const { data: salesAgents } = useFetch(url, { allAgents: [] });
+  const { agents } = useAgentContext();
 
   return (
-    <div>
+    <div className="page-wrapper">
       
       <header>
         <Navbar/>
@@ -91,7 +90,7 @@ export default function SalesManagement() {
       >
         <MobileSidebar />
         {/* Page Header */}
-        <div className="d-flex justify-content-between align-items-center mb-4">
+        <div className="d-flex justify-content-between align-items-start flex-wrap gap-3 mb-4">
           <div>
             <h2 className="fw-bold mb-1">Sales Agent Management</h2>
             <p className="text-muted mb-0">
@@ -109,7 +108,7 @@ export default function SalesManagement() {
           <div className="card-body">
             <h5 className="fw-bold mb-3">Sales Agents</h5>
             <SalesAgentList 
-              agents={salesAgents.allAgents}
+              agents={agents}
               leads={leadData}
             />
           </div>

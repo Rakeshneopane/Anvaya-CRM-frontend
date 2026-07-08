@@ -152,7 +152,7 @@ export default function Reports() {
   }, {});
 
   return (
-    <div>
+    <div className="page-wrapper">
       <Navbar />
       <Sidebar />
 

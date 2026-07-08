@@ -28,9 +28,10 @@ export default function App(){
         <AgentProvider>
           
           <Routes>
+            <Route path="/" element={  <Home /> }></Route>
             <Route path="/login/*" element={<Login />}></Route>
             <Route path="/signup/*" element={<Signup />}></Route>
-            <Route path="/" element={ <ProtectedRoute> <Home /> </ProtectedRoute> }></Route>
+            
             <Route path="/leadManagement/:leadId" element={ <ProtectedRoute>  <LeadManagement /> </ProtectedRoute>}></Route>
             <Route path="/addNewSalesAgent" element={<ProtectedRoute> <AddNewSalesAgent /> </ProtectedRoute>}></Route>
             <Route path="/leadList" element={<ProtectedRoute> <LeadList /> </ProtectedRoute>}></Route>
@@ -41,7 +42,7 @@ export default function App(){
             <Route path="/SalesAgentView" element={<ProtectedRoute><SalesAgentView /> </ProtectedRoute>}></Route>
             <Route path="/SalesManagement" element={<ProtectedRoute> <SalesManagement /> </ProtectedRoute>}></Route>
             <Route path="/Settings" element={<ProtectedRoute> <Settings /> </ProtectedRoute>}></Route>
-            {/* <Route path="/unauthorized-sign-in" element={<UnauthorizedSignIn />} /> */}
+            <Route path="/unauthorized-sign-in" element={<div> Unauthorised </div>} />
             <Route
               path="/login/sso-callback"
               element={<div>SSO callback reached</div>}

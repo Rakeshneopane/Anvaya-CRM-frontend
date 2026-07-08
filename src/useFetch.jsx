@@ -7,10 +7,10 @@ export const useFetch = (url, initialData) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const { getToken } = useAuth()
+  const { getToken, isLoaded, isSignedIn } = useAuth()
 
   const fetchData = useCallback(() => {
-    if (!url) return;
+    if (!url || !isLoaded || !isSignedIn) return;
 
     let active = true;
     setLoading(true);
@@ -18,13 +18,24 @@ export const useFetch = (url, initialData) => {
 
     async function run() {
       try {
-        const token = await getToken()
+        const token = await getToken();
+
+        if (!token) {
+          throw new Error("No auth token available");
+        }
+
         const response = await fetch( url, {
               headers: {
                   Authorization: `Bearer ${token}`
               }
           } 
         );
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({}));
+          throw new Error(errBody.error || `Request failed with ${response.status}`);
+        }
+
         const json = await response.json();
         if (active) setData(json);
       } catch (err) {
@@ -39,7 +50,7 @@ export const useFetch = (url, initialData) => {
     return () => {
       active = false;
     };
-  }, [url]);
+  }, [url, isLoaded, isSignedIn]);
 
   useEffect(() => {
     const cleanup = fetchData();
